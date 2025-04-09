@@ -1,0 +1,76 @@
+#Define Board Type
+esphome:
+  name: presence_sensor
+  comment: "Датчик присутствия HLK-LD2402 v1.2"
+
+# Конфигурация платы ESP8266
+esp8266:
+  board: nodemcuv2  # Тип платы
+  framework:
+    version: recommended  # Версия Arduino framework
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/man1376/ESPHome-LD2402.git
+    components: [hlk_ld2402]
+
+# Настройки подключения
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  power_save_mode: none
+  fast_connect: true
+
+  manual_ip:
+    # Set this to the IP of the ESP
+    static_ip: 192.168.1.21
+    # Set this to the IP address of the router. Often ends with .1
+    gateway: 192.168.1.1
+    # The subnet of the network. 255.255.255.0 works for most home networks.
+    subnet: 255.255.255.0
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Radar-LD2402-AP"
+    password: !secret ap_password
+    
+#Вэбсервер для локального контроля прибора (необязательно)
+web_server:
+  port: 8080
+  auth:
+    username: !secret web_user
+    password: !secret web_pass
+
+logger:
+  level: DEBUG
+  baud_rate: 0
+
+uart:
+  id: uart_bus
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  baud_rate: 9600
+
+hlk_ld2402:
+  id: hlk_ld2402_component
+  uart_id: uart_bus
+
+binary_sensor:
+  - platform: hlk_ld2402
+    type: presence
+    name: "Presence Detected"
+    hlk_ld2402_id: hlk_ld2402_component
+
+  - platform: hlk_ld2402
+    type: motion
+    name: "Motion Detected"
+    hlk_ld2402_id: hlk_ld2402_component

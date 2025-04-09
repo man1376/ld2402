@@ -1,0 +1,1 @@
+#include "hlk_ld2402_binary_sensor.h"

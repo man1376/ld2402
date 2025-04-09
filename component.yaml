@@ -1,0 +1,12 @@
+esphome:
+  name: hlk_ld2402
+
+includes:
+  - hlk_ld2402.h
+  - hlk_ld2402_binary_sensor.h
+
+libraries: []
+
+components:
+  - id: hlk_ld2402_component
+    class: esphome::hlk_ld2402::HLKLD2402Component
