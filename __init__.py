@@ -1,1 +1,1 @@
-"""HLK-LD2402 component."""
+
